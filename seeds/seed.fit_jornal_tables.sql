@@ -64,7 +64,7 @@ values (1,1),
 (4,2),
 (4,3),
 (4,4),
-(4,1)
+(4,1);
 
 INSERT INTO workouts (name)
 values ('full body workout'),

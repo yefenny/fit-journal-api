@@ -4,5 +4,5 @@ CREATE TABLE exercises (
     url TEXT,
     description TEXT,
     date_created timestamp DEFAULT now(),
-    user_id INTEGER REFERENCES users(id)
+    user_id INTEGER REFERENCES users(id) ON DELETE CASCADE NOT NULL
 )
