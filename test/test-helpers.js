@@ -1,4 +1,6 @@
-const knex = require('knex');
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
+
 function makeUsersArray() {
   return [
     {
@@ -68,8 +70,35 @@ function cleanTables(db) {
       )
   );
 }
+function seedUserTable(db, users) {
+  const hashedUser = users.map((user) => {
+    return {
+      ...user,
+      password: bcrypt.hashSync(user.password, 7)
+    };
+  });
+  return db('users')
+    .insert(hashedUser)
+    .then(() => {
+      return db.raw(
+        `SELECT setval('users_id_seq',?)`,
+        users[users.length - 1].id
+      );
+    });
+}
+
+function jwtToken(user) {
+  const token = jwt.sign({ user_id: user.id }, process.env.JWT_SECRET, {
+    subject: user.user_name,
+    algorithm: 'HS256'
+  });
+
+  return token;
+}
 
 module.exports = {
   makeUsersArray,
-  cleanTables
+  cleanTables,
+  seedUserTable,
+  jwtToken
 };
