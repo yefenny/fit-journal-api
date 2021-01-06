@@ -5,28 +5,28 @@ function makeUsersArray() {
   return [
     {
       id: 1,
-      user_name: 'test-user-1',
+      email: 'test-user-1@email.com',
       full_name: 'test user 1',
       password: 'password',
       date_created: new Date('2029-01-22T16:28:32.615Z')
     },
     {
       id: 2,
-      user_name: 'test-user-2',
+      email: 'test-user-2@email.com',
       full_name: 'Test user 2',
       password: 'password',
       date_created: new Date('2029-01-22T16:28:32.615Z')
     },
     {
       id: 3,
-      user_name: 'test-user-3',
+      email: 'test-user-3@email.com',
       full_name: 'Test user 3',
       password: 'password',
       date_created: new Date('2029-01-22T16:28:32.615Z')
     },
     {
       id: 4,
-      user_name: 'test-user-4',
+      email: 'test-user-4@email.com',
       full_name: 'Test user 4',
       password: 'password',
       date_created: new Date('2029-01-22T16:28:32.615Z')
@@ -89,7 +89,7 @@ function seedUserTable(db, users) {
 
 function jwtToken(user) {
   const token = jwt.sign({ user_id: user.id }, process.env.JWT_SECRET, {
-    subject: user.user_name,
+    subject: user.email,
     algorithm: 'HS256'
   });
 

@@ -1,11 +1,10 @@
 const express = require('express');
 const userRouter = express.Router();
 const UsersService = require('./users-service');
-const jsonParser = express.json();
-userRouter.route('/signup/').post(jsonParser, (req, res, next) => {
-  const { user_name, full_name, password } = req.body;
+userRouter.route('/signup/').post((req, res, next) => {
+  const { email, full_name, password } = req.body;
   const db = req.app.get('db');
-  const requiredFields = { user_name, full_name, password };
+  const requiredFields = { email, full_name, password };
   for (let [key, value] of Object.entries(requiredFields)) {
     if (!value) {
       return res
@@ -14,43 +13,48 @@ userRouter.route('/signup/').post(jsonParser, (req, res, next) => {
     }
   }
 
-  UsersService.getUserByName(db, user_name)
+  UsersService.getUserByEmail(db, email)
     .then((user) => {
       if (user) {
         return res
           .status(400)
-          .json({ error: { message: `user_name already exists` } });
+          .json({ error: { message: `email already exists` } });
       }
       requiredFields.password = UsersService.bcryptPassword(password);
 
       UsersService.insertUser(req.app.get('db'), requiredFields)
         .then(() => {
-          return res.sendStatus(201);
+          UsersService.getUserByEmail(db, email).then((user) => {
+            if (user) {
+              const token = UsersService.generateJwtToken(user);
+              return res.status(201).send({ authToken: token });
+            }
+          });
         })
         .catch(next);
     })
     .catch(next);
 });
 
-userRouter.route('/login/').post(jsonParser, (req, res, next) => {
-  const { user_name, password } = req.body;
+userRouter.route('/login/').post((req, res, next) => {
+  const { email, password } = req.body;
   const db = req.app.get('db');
 
-  const requiredFields = { user_name, password };
+  const requiredFields = { email, password };
 
   for (let [key, value] of Object.entries(requiredFields)) {
     if (!value)
       return res.status(400).json({ error: { message: `${key} is missing` } });
   }
 
-  UsersService.getUserByName(db, user_name).then((user) => {
+  UsersService.getUserByEmail(db, email).then((user) => {
     if (!user)
       return res.status(400).json({
-        error: { message: ` 'user_name' or 'password' invalid` }
+        error: { message: ` 'email' or 'password' invalid` }
       });
     if (!UsersService.checkPassword(password, user.password)) {
       return res.status(400).json({
-        error: { message: ` 'user_name' or 'password' invalid` }
+        error: { message: ` 'email' or 'password' invalid` }
       });
     }
     const token = UsersService.generateJwtToken(user);

@@ -8,15 +8,15 @@ const UsersService = {
   bcryptPassword(password) {
     return bcrypt.hashSync(password, 7);
   },
-  getUserByName(knex, user_name) {
-    return knex('users').select('*').where('user_name', user_name).first();
+  getUserByEmail(knex, email) {
+    return knex('users').select('*').where('email', email).first();
   },
   checkPassword(password, hashedPassword) {
     return bcrypt.compareSync(password, hashedPassword);
   },
   generateJwtToken(user) {
     return jwt.sign({ user_id: user.id }, config.JWT_SECRET, {
-      subject: user.user_name,
+      subject: user.email,
       algorithm: 'HS256'
     });
   }

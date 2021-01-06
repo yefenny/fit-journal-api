@@ -2,13 +2,13 @@ BEGIN;
 
 TRUNCATE users, users_body_composition, meals, exercises , body_part, muscle_group, exercises_muscle_group, workouts, workouts_exercises RESTART IDENTITY CASCADE;
 
-INSERT INTO users (user_name, full_name, password)
-values ('dunder', 'Dunder Mifflin', '$2a$12$lHK6LVpc15/ZROZcKU00QeiD.RyYq5dVlV/9m4kKYbGibkRc5l4Ne'),
-  ('b.deboop', 'Bodeep Deboop', '$2a$12$VQ5HgWm34QQK2rJyLc0lmu59cy2jcZiV6U1.bE8rBBnC9VxDf/YQO'),
-  ('c.bloggs', 'Charlie Bloggs', '$2a$12$2fv9OPgM07xGnhDbyL6xsuAeQjAYpZx/3V2dnu0XNIR27gTeiK2gK'),
-  ('s.smith', 'Sam Smith', '$2a$12$/4P5/ylaB7qur/McgrEKwuCy.3JZ6W.cRtqxiJsYCdhr89V4Z3rp.'),
-  ('lexlor', 'Alex Taylor','$2a$12$Hq9pfcWWvnzZ8x8HqJotveRHLD13ceS7DDbrs18LpK6rfj4iftNw.'),
-  ('wippy', 'Ping Won In','$2a$12$ntGOlTLG5nEXYgDVqk4bPejBoJP65HfH2JEMc1JBpXaVjXo5RsTUu');
+INSERT INTO users (email, full_name, password)
+values ('dunder@gmail.com', 'Dunder Mifflin', '$2a$12$lHK6LVpc15/ZROZcKU00QeiD.RyYq5dVlV/9m4kKYbGibkRc5l4Ne'),
+  ('b.deboop@icloud.com', 'Bodeep Deboop', '$2a$12$VQ5HgWm34QQK2rJyLc0lmu59cy2jcZiV6U1.bE8rBBnC9VxDf/YQO'),
+  ('c.bloggs@yahoo.com', 'Charlie Bloggs', '$2a$12$2fv9OPgM07xGnhDbyL6xsuAeQjAYpZx/3V2dnu0XNIR27gTeiK2gK'),
+  ('s.smith@hotmail.com', 'Sam Smith', '$2a$12$/4P5/ylaB7qur/McgrEKwuCy.3JZ6W.cRtqxiJsYCdhr89V4Z3rp.'),
+  ('lexlor@gmail.com', 'Alex Taylor','$2a$12$Hq9pfcWWvnzZ8x8HqJotveRHLD13ceS7DDbrs18LpK6rfj4iftNw.'),
+  ('wippy@icloud.com', 'Ping Won In','$2a$12$ntGOlTLG5nEXYgDVqk4bPejBoJP65HfH2JEMc1JBpXaVjXo5RsTUu');
 
 
 INSERT INTO users_body_composition (user_id,left_arm,right_arm,chest, waist, hips,left_thigh, right_thigh,left_calf, right_calf, weight, body_fat)
@@ -68,7 +68,7 @@ values (1,1),
 (4,4),
 (4,1);
 
-INSERT INTO workouts (name,user_id)
+INSERT INTO workouts (title,user_id)
 values ('full body workout',1),
 ('lower body',1),
 ('upper body',1);

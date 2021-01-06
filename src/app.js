@@ -5,7 +5,10 @@ const cors = require('cors');
 const helmet = require('helmet');
 const NODE_ENV = require('./config');
 const userRouter = require('./users/user-router');
+const auth = require('./middleware/auth');
+const exercisesRouter = require('./exercises/exercises-router');
 
+const jsonParser = express.json();
 const app = express();
 
 const morganOption = NODE_ENV === 'production' ? 'tiny' : 'common';
@@ -13,8 +16,11 @@ const morganOption = NODE_ENV === 'production' ? 'tiny' : 'common';
 app.use(morgan(morganOption));
 app.use(helmet());
 app.use(cors());
+app.use(jsonParser);
 
 app.use('/api/users/', userRouter);
+app.use(auth);
+app.use('/api/exercises', exercisesRouter);
 app.get('/', (req, res) => {
   res.send('Hello, world!');
 });

@@ -21,15 +21,19 @@ describe('User endpoints', () => {
 
   describe('POST /signup ', () => {
     context('given users has no data', () => {
-      it(`send 201 after creating `, () => {
+      it(`send 201 after creating with token`, () => {
         const user = users[0];
-        return supertest(app).post('/api/users/signup').send(user).expect(201);
+        const jwtToken = helpers.jwtToken(user);
+        return supertest(app)
+          .post('/api/users/signup')
+          .send(user)
+          .expect(201, { authToken: jwtToken });
       });
 
-      const requiredFields = ['user_name', 'full_name', 'password'];
+      const requiredFields = ['email', 'full_name', 'password'];
       requiredFields.forEach((value) => {
         let newUser = {
-          user_name: users[0].user_name,
+          email: users[0].email,
           full_name: users[0].full_name,
           password: users[0].password
         };
@@ -44,9 +48,9 @@ describe('User endpoints', () => {
     });
     context('given users has data', () => {
       beforeEach('seed users table', () => helpers.seedUserTable(db, users));
-      it(`Should 400 'user_name already exists `, () => {
+      it(`Should 400 'email already exists `, () => {
         const user = {
-          user_name: users[0].user_name,
+          email: users[0].email,
           full_name: 'new-user',
           password: 'neeew'
         };
@@ -54,16 +58,16 @@ describe('User endpoints', () => {
         return supertest(app)
           .post('/api/users/signup')
           .send(user)
-          .expect(400, { error: { message: `user_name already exists` } });
+          .expect(400, { error: { message: `email already exists` } });
       });
     });
   });
   describe('POST /login', () => {
     beforeEach('insert users', () => helpers.seedUserTable(db, users));
-    const requiredFields = ['user_name', 'password'];
+    const requiredFields = ['email', 'password'];
     requiredFields.forEach((value) => {
       const user = {
-        user_name: users[0].user_name,
+        email: users[0].email,
         password: users[0].password
       };
       it(`returns 400 if '${value}'is missing `, () => {
@@ -77,31 +81,31 @@ describe('User endpoints', () => {
 
     it(`returns 400 is user doesn't exists in database`, () => {
       const user = {
-        user_name: 'user',
+        email: 'user',
         password: 'pass'
       };
       return supertest(app)
         .post('/api/users/login')
         .send(user)
         .expect(400, {
-          error: { message: ` 'user_name' or 'password' invalid` }
+          error: { message: ` 'email' or 'password' invalid` }
         });
     });
     it(`returns 400 is password doesn't match user`, () => {
       const user = {
-        user_name: 'test-user-1',
+        email: 'test-user-1',
         password: 'pass'
       };
       return supertest(app)
         .post('/api/users/login')
         .send(user)
         .expect(400, {
-          error: { message: ` 'user_name' or 'password' invalid` }
+          error: { message: ` 'email' or 'password' invalid` }
         });
     });
-    it('returns valid json token if user_name and password are valid', () => {
+    it('returns valid json token if email and password are valid', () => {
       const user = {
-        user_name: users[0].user_name,
+        email: users[0].email,
         password: users[0].password
       };
       const token = helpers.jwtToken(users[0]);
