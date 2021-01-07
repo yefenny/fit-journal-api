@@ -12,5 +12,19 @@ exercisesRouter.route('/').get((req, res, next) => {
     })
     .catch(next);
 });
+exercisesRouter.route('/:id').get((req, res, next) => {
+  const userId = req.user.id;
+  const exerciseId = req.params.id;
+  ExercisesServices.getExerciseById(req.app.get('db'), userId, exerciseId).then(
+    (exercise) => {
+      if (!exercise) {
+        return res
+          .status(404)
+          .json({ error: { message: 'Exercise not found' } });
+      }
+      res.send(exercise);
+    }
+  );
+});
 
 module.exports = exercisesRouter;
