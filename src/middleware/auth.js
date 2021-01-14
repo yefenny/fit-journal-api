@@ -2,8 +2,8 @@ const express = require('express');
 const jwt = require('jsonwebtoken');
 const AuthService = require('./auth-service');
 function auth(req, res, next) {
-  const token = req.header('Authorization');
-  const jwtToken = token.split(' ')[1];
+  const token = req.header('Authorization') || '';
+  let jwtToken = token.split(' ')[1];
 
   if (!token.toLowerCase().startsWith('bearer')) {
     return res.status(400).json({ error: { message: 'Invalid Auth' } });
