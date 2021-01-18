@@ -15,35 +15,15 @@ exercisesRouter
       })
       .catch(next);
   })
+  .all(validateRequired)
   .post((req, res, next) => {
     const { title, url, description, muscle_ids } = req.body;
     const newExercise = { title };
+
     const db = req.app.get('db');
-    if (!title) {
-      return res
-        .status(400)
-        .json({ error: { message: 'Exercise should have a title' } });
-    }
 
-    if (!muscle_ids || !muscle_ids.length) {
-      return res.status(400).json({
-        error: { message: 'Exercise should have at least one muscle group' }
-      });
-    }
-    muscle_ids.forEach((muscle) => {
-      if (!('muscle_group_id' in muscle))
-        res.status(400).json({
-          error: { message: 'Exercise should have the key muscle_group_id' }
-        });
-    });
+    if (url) newExercise.url = url;
 
-    if (url) {
-      if (validUrl.isUri(url)) newExercise.url = url;
-      else
-        return res
-          .status(400)
-          .json({ error: { message: 'Shoul insert valid URL' } });
-    }
     if (description) newExercise.description = description;
     newExercise.user_id = req.user.id;
     ExercisesServices.insertExercise(db, newExercise)
@@ -92,6 +72,85 @@ exercisesRouter
     ExercisesServices.deleteExercise(db, id, userId).then(() => {
       res.status(204).location('/api/exercises/').end();
     });
+  })
+  .all(validateRequired)
+  .patch(async (req, res, next) => {
+    const { title, url, description, muscle_ids } = req.body;
+    const { id } = req.params;
+    const db = req.app.get('db');
+    const exercise = { title };
+    const userId = req.user.id;
+    let shouldEdit = false;
+
+    if (url) exercise.url = url;
+    if (description) exercise.description = description;
+    await ExercisesServices.getExercisesMuscleGroup(db, id)
+      .then((results) => {
+        if (results) {
+          muscle_ids.forEach((muscle) => {
+            let found = [];
+            found = results.find(
+              (val) => val.muscle_group_id === muscle.muscle_group_id
+            );
+            if (!found) shouldEdit = true;
+            if (exercise.length !== muscle_ids.length) shouldEdit = true;
+          });
+        }
+      })
+      .catch(next);
+    if (shouldEdit)
+      await ExercisesServices.deleteExercisesMuscleGroup(db, id).catch(next);
+
+    ExercisesServices.updateExercise(db, id, userId, exercise)
+      .then((exercise) => {
+        if (exercise) {
+          muscle_ids.forEach((muscle) => {
+            muscle.exercise_id = id;
+          });
+          if (shouldEdit) {
+            ExercisesServices.insertExerciseMuscle(db, muscle_ids)
+              .then((val) => {
+                if (val) res.status(204).location('api/exercises/').end();
+              })
+              .catch(next);
+          } else res.status(204).location('api/exercises/').end();
+        }
+      })
+      .catch(next);
   });
+
+function validateRequired(req, res, next) {
+  const { title, url, description, muscle_ids } = req.body;
+  let invalidMuscle = false;
+  const validKey = true;
+  if (!title) {
+    return res
+      .status(400)
+      .json({ error: { message: 'Exercise should have a title' } });
+  }
+
+  if (!muscle_ids || !muscle_ids.length) {
+    return res.status(400).json({
+      error: { message: 'Exercise should have at least one muscle group' }
+    });
+  }
+
+  if (url) {
+    if (!validUrl.isUri(url)) {
+      return res
+        .status(400)
+        .json({ error: { message: 'Shoul insert valid URL' } });
+    }
+  }
+  muscle_ids.forEach((muscle) => {
+    if (!('muscle_group_id' in muscle)) invalidMuscle = true;
+  });
+  if (invalidMuscle)
+    return res.status(400).json({
+      error: { message: 'Exercise should have the key muscle_group_id' }
+    });
+
+  next();
+}
 
 module.exports = exercisesRouter;
