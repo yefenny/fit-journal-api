@@ -24,6 +24,10 @@ const ExercisesServices = {
   updateExercise(db, id, userId, values) {
     return db('exercises').where({ user_id: userId, id: id }).update(values);
   },
+  filterExercise(db, parameter, userId) {
+    const query = `select e.id , e.title, e.title, e.url, e.description, json_agg (json_build_object('id', mg.id,'name', mg.name, 'body_part', json_build_object('id',bp.id,'name',bp."name"))) as exercises_muscle_group from exercises e left join exercises_muscle_group emg on emg.exercise_id = e.id  join muscle_group mg on mg.id = emg.muscle_group_id left join body_part bp on mg.body_part_id = bp.id where  e.user_id = ${userId} and (e.title ilike '%${parameter}%' or e.description ilike '%${parameter}%' or mg.name ilike '%${parameter}%' or bp.name ilike '%${parameter}%') group by e.id `;
+    return db.raw(query).then((res) => res.rows);
+  },
   getExercisesMuscleGroup(db, exerciseId) {
     return db('exercises_muscle_group').where('exercise_id', exerciseId);
   },

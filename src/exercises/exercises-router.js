@@ -153,4 +153,17 @@ function validateRequired(req, res, next) {
   next();
 }
 
+exercisesRouter.route('/find/:query').get((req, res, next) => {
+  const { query } = req.params;
+  const { id } = req.user;
+
+  ExercisesServices.filterExercise(req.app.get('db'), query, id)
+    .then((exercises) => {
+      if (res) {
+        res.send(exercises);
+      }
+    })
+    .catch(next);
+});
+
 module.exports = exercisesRouter;
