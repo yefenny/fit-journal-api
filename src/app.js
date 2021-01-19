@@ -9,6 +9,7 @@ const auth = require('./middleware/auth');
 const exercisesRouter = require('./exercises/exercises-router');
 const bodyPartsRouter = require('./body-parts/body-parts-router');
 const muscleGroupsRouter = require('./muscle-groups/muscle-groups-router');
+const mealsRouter = require('./meals/meals-router');
 
 const jsonParser = express.json();
 const app = express();
@@ -25,6 +26,7 @@ app.use(auth);
 app.use('/api/exercises', exercisesRouter);
 app.use('/api/body-parts', bodyPartsRouter);
 app.use('/api/muscle-groups', muscleGroupsRouter);
+app.use('/api/meals', mealsRouter);
 app.get('/', (req, res) => {
   res.send('Hello, world!');
 });
