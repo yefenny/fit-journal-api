@@ -8,6 +8,18 @@ const MealsService = {
   },
   getMealById(db, id, userId) {
     return db('meals').select('*').where({ user_id: userId, id: id }).first();
+  },
+  createMeal(db, values) {
+    return db('meals')
+      .insert(values)
+      .returning('*')
+      .then((rows) => rows[0]);
+  },
+  deleteMeal(db, id, userId) {
+    return db('meals').where({ user_id: userId, id: id }).delete();
+  },
+  updateMeal(db, id, userId, values) {
+    return db('meals').where({ user_id: userId, id: id }).update(values);
   }
 };
 module.exports = MealsService;
