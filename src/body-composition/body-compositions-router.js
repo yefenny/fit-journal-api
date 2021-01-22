@@ -174,4 +174,17 @@ function validateBodyComposition(req, res, next) {
   }
   next();
 }
+
+bodyCompositionsRouter
+  .route('/find/:fromDate/:toDate')
+  .get((req, res, next) => {
+    const { fromDate, toDate } = req.params;
+    const { id } = req.user;
+    const db = req.app.get('db');
+    BodyCompositionsService.filterBodyComposition(db, fromDate, toDate, id)
+      .then((values) => {
+        if (values) return res.send(values);
+      })
+      .catch(next);
+  });
 module.exports = bodyCompositionsRouter;

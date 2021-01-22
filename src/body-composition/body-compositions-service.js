@@ -25,6 +25,10 @@ const BodyCompositionsService = {
     return db('users_body_composition')
       .where({ id: id, user_id: userId })
       .update(values);
+  },
+  filterBodyComposition(db, fromDate, toDate, userId) {
+    const query = `select * from users_body_composition ubc where date_created >= '${fromDate}' and date_created <= '${toDate} 23:59:59' and user_id = ${userId} order by date_created desc`;
+    return db.raw(query).then((res) => res.rows);
   }
 };
 
