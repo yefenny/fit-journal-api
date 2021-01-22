@@ -55,17 +55,79 @@ bodyCompositionsRouter
       .catch(next);
   });
 
-bodyCompositionsRouter.route('/:id').get((req, res, next) => {
-  const { id } = req.params;
-  const userId = req.user.id;
-  const db = req.app.get('db');
+bodyCompositionsRouter
+  .route('/:id')
+  .get((req, res, next) => {
+    const { id } = req.params;
+    const userId = req.user.id;
+    const db = req.app.get('db');
 
-  BodyCompositionsService.getBodyCompositionById(db, id, userId)
-    .then((val) => {
-      if (val) return res.status(200).json(val);
-    })
-    .catch(next);
-});
+    BodyCompositionsService.getBodyCompositionById(db, id, userId)
+      .then((val) => {
+        if (val) return res.status(200).json(val);
+      })
+      .catch(next);
+  })
+  .delete((req, res, next) => {
+    const { id } = req.params;
+    const db = req.app.get('db');
+    const userId = req.user.id;
+
+    BodyCompositionsService.getBodyCompositionById(db, id, userId)
+      .then((val) => {
+        if (!val)
+          return res.status(400).json({ message: 'Entry does not exists' });
+      })
+      .catch(next);
+
+    BodyCompositionsService.deleteBodyComposition(db, id, userId)
+      .then(() => {
+        return res.status(202).end();
+      })
+      .catch(next);
+  })
+  .all(validateBodyComposition)
+  .patch((req, res, next) => {
+    const {
+      left_arm,
+      right_arm,
+      chest,
+      waist,
+      hips,
+      left_thigh,
+      right_thigh,
+      left_calf,
+      right_calf,
+      weight,
+      body_fat
+    } = req.body;
+    const checkValues = {
+      left_arm,
+      right_arm,
+      chest,
+      waist,
+      hips,
+      left_thigh,
+      right_thigh,
+      left_calf,
+      right_calf,
+      body_fat
+    };
+    const { id } = req.params;
+    const userId = req.user.id;
+    const updateEntry = { weight, date_updated: new Date() };
+    const db = req.app.get('db');
+
+    for (let [key, value] of Object.entries(checkValues)) {
+      if (value) updateEntry[key] = value;
+    }
+
+    BodyCompositionsService.updateBodyComposition(db, id, userId, updateEntry)
+      .then(() => {
+        return res.status(202).end();
+      })
+      .catch(next);
+  });
 
 function validateBodyComposition(req, res, next) {
   const {
