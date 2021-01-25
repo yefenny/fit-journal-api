@@ -62,16 +62,20 @@ exercisesRouter
     const { id } = req.params;
     const userId = req.user.id;
     const db = req.app.get('db');
-    ExercisesServices.getExerciseById(db, id).then((exercise) => {
-      if (!exercise) {
-        return res
-          .status(404)
-          .json({ error: { message: 'Exercise not found' } });
-      }
-    });
-    ExercisesServices.deleteExercise(db, id, userId).then(() => {
-      res.status(204).location('/api/exercises/').end();
-    });
+    ExercisesServices.getExerciseById(db, id, userId)
+      .then((exercise) => {
+        if (!exercise) {
+          return res
+            .status(404)
+            .json({ error: { message: 'Exercise not found' } });
+        }
+      })
+      .catch(next);
+    ExercisesServices.deleteExercise(db, id, userId)
+      .then(() => {
+        return res.status(204).end();
+      })
+      .catch(next);
   })
   .all(validateRequired)
   .patch(async (req, res, next) => {
@@ -139,7 +143,7 @@ function validateRequired(req, res, next) {
     if (!validUrl.isUri(url)) {
       return res
         .status(400)
-        .json({ error: { message: 'Shoul insert valid URL' } });
+        .json({ error: { message: 'Should insert valid URL' } });
     }
   }
   muscle_ids.forEach((muscle) => {

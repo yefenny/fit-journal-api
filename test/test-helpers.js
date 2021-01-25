@@ -33,6 +33,54 @@ function makeUsersArray() {
     }
   ];
 }
+function makeExerciseArray() {
+  return [
+    {
+      id: 1,
+      title: 'squat',
+      url: 'https://www.youtube.com/watch?v=U3HlEF_E9fo',
+      description: 'exercise to better legs',
+      user_id: 1
+    },
+    {
+      id: 2,
+      title: 'lunge',
+      url: 'https://www.youtube.com/watch?v=U3HlEF_E9fo',
+      description: 'exercise for legs',
+      user_id: 1
+    }
+  ];
+}
+function makeExerciseMuscleArray() {
+  return [
+    { id: 1, exercise_id: 1, muscle_id: 10 },
+    { id: 2, exercise_id: 2, muscle_id: 10 }
+  ];
+}
+function insertBodyPartsAndMuscles(db) {
+  return db.raw(` INSERT INTO body_part(name,category) 
+  values('chest','upper body'),
+  ('back','upper body'),
+  ('arms','upper body'),
+  ('abdominals','upper body'),
+  ('legs','lower body'),
+  ('shoulders','upper body');
+ 
+  INSERT into muscle_group (name, body_part_id)
+  values ('calves',5),
+  ('hamstrings',5),
+  ('quadriceps',5),
+  ('glutes',5),
+  ('biceps',3),
+  ('triceps',3),
+  ('forearms',3),
+  ('trapezius',6),
+  ('Latissimus dorsi',2),
+  ('upper chest', 1),
+  ('middle chest',1),
+  ('lower chest', 1),
+  ('abdominals',4);`);
+}
 function cleanTables(db) {
   return db.transaction((mdb) =>
     mdb
@@ -41,31 +89,9 @@ function cleanTables(db) {
       )
       .then(() =>
         Promise.all([
-          mdb.raw(`Alter sequence body_part_id_seq minvalue 0 START WITH 1`),
-          mdb.raw(`Alter sequence exercises_id_seq minvalue 0 START WITH 1`),
           mdb.raw(
-            `Alter sequence exercises_muscle_group_id_seq minvalue 0 START WITH 1`
-          ),
-          mdb.raw(`Alter sequence meals_id_seq minvalue 0 START WITH 1`),
-          mdb.raw(`ALter sequence muscle_group_id_seq minvalue 0 START WITH 1`),
-          mdb.raw(
-            `Alter sequence users_body_composition_id_seq minvalue 0 START with 1`
-          ),
-          mdb.raw(`Alter sequence users_id_seq minvalue 0 START WITH 1`),
-          mdb.raw(
-            `Alter sequence workouts_exercises_id_seq minvalue 0 START WITH 1`
-          ),
-          mdb.raw(`Alter sequence workouts_id_seq minvalue 0 START WITH 1`),
-
-          mdb.raw(`SELECT setval('body_part_id_seq',0)`),
-          mdb.raw(`SELECT setval('exercises_id_seq',0)`),
-          mdb.raw(`SELECT setval('exercises_muscle_group_id_seq',0)`),
-          mdb.raw(`SELECT setval('meals_id_seq',0)`),
-          mdb.raw(`SELECT setval('muscle_group_id_seq',0)`),
-          mdb.raw(`SELECT setval('users_body_composition_id_seq',0)`),
-          mdb.raw(`SELECT setval('users_id_seq',0)`),
-          mdb.raw(`SELECT setval('workouts_exercises_id_seq',0)`),
-          mdb.raw(`SELECT setval('workouts_id_seq',0)`)
+            `TRUNCATE users, users_body_composition, meals, exercises , body_part, muscle_group, exercises_muscle_group, workouts, workouts_exercises RESTART IDENTITY CASCADE`
+          )
         ])
       )
   );
@@ -100,5 +126,7 @@ module.exports = {
   makeUsersArray,
   cleanTables,
   seedUserTable,
-  jwtToken
+  jwtToken,
+  makeExerciseArray,
+  insertBodyPartsAndMuscles
 };
