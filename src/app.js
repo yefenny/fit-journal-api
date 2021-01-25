@@ -22,7 +22,7 @@ app.use(helmet());
 app.use(cors());
 app.use(jsonParser);
 
-app.use('/api/users/', userRouter);
+app.use('/api/users', userRouter);
 app.use(auth);
 app.use('/api/exercises', exercisesRouter);
 app.use('/api/body-parts', bodyPartsRouter);

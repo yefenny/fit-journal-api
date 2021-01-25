@@ -29,6 +29,13 @@ const BodyCompositionsService = {
   filterBodyComposition(db, fromDate, toDate, userId) {
     const query = `select * from users_body_composition ubc where date_created >= '${fromDate}' and date_created <= '${toDate} 23:59:59' and user_id = ${userId} order by date_created desc`;
     return db.raw(query).then((res) => res.rows);
+  },
+  getBodyCompositionAverage(db, userId) {
+    const query = `select to_char(DATE_CREATED, 'Month yyyy'), avg(weight) as weight ,avg ( body_fat ) as body_fat
+    from users_body_composition ubc where ubc.user_id = ${userId}
+    group by to_char(DATE_CREATED, 'Month yyyy')
+    `;
+    return db.raw(query).then((res) => res.rows);
   }
 };
 

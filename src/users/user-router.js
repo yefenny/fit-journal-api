@@ -1,4 +1,5 @@
 const express = require('express');
+const auth = require('../middleware/auth');
 const userRouter = express.Router();
 const UsersService = require('./users-service');
 userRouter.route('/signup/').post((req, res, next) => {
@@ -61,5 +62,20 @@ userRouter.route('/login/').post((req, res, next) => {
     res.send({ authToken: token });
   });
 });
+
+userRouter
+  .route('/')
+  .all(auth)
+  .get((req, res, next) => {
+    const { email } = req.user;
+    UsersService.getUserByEmail(req.app.get('db'), email)
+      .then((user) => {
+        if (user) {
+          const { full_name } = user;
+          return res.json({ full_name });
+        }
+      })
+      .catch(next);
+  });
 
 module.exports = userRouter;

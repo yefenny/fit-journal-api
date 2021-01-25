@@ -187,4 +187,13 @@ bodyCompositionsRouter
       })
       .catch(next);
   });
+bodyCompositionsRouter.route('/chart/average').get((req, res, next) => {
+  const { id } = req.user;
+
+  BodyCompositionsService.getBodyCompositionAverage(req.app.get('db'), id)
+    .then((val) => {
+      if (val) res.send(val);
+    })
+    .catch(next);
+});
 module.exports = bodyCompositionsRouter;
