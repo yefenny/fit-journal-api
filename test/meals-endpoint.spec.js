@@ -4,7 +4,7 @@ const supertest = require('supertest');
 const helpers = require('./test-helpers');
 const { expect } = require('chai');
 
-describe.only('Meals endpoint', () => {
+describe('Meals endpoint', () => {
   let db;
   let users = helpers.makeUsersArray();
   let token = helpers.jwtToken(users[0]);

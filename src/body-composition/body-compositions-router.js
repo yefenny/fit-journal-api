@@ -76,7 +76,9 @@ bodyCompositionsRouter
     BodyCompositionsService.getBodyCompositionById(db, id, userId)
       .then((val) => {
         if (!val)
-          return res.status(400).json({ message: 'Entry does not exists' });
+          return res
+            .status(400)
+            .json({ error: { message: 'Entry does not exists' } });
       })
       .catch(next);
 
@@ -87,7 +89,7 @@ bodyCompositionsRouter
       .catch(next);
   })
   .all(validateBodyComposition)
-  .patch((req, res, next) => {
+  .patch(async (req, res, next) => {
     const {
       left_arm,
       right_arm,
@@ -121,6 +123,14 @@ bodyCompositionsRouter
     for (let [key, value] of Object.entries(checkValues)) {
       if (value) updateEntry[key] = value;
     }
+    await BodyCompositionsService.getBodyCompositionById(db, id, userId)
+      .then((val) => {
+        if (!val)
+          return res
+            .status(400)
+            .json({ error: { message: 'Entry does not exists' } });
+      })
+      .catch(next);
 
     BodyCompositionsService.updateBodyComposition(db, id, userId, updateEntry)
       .then(() => {

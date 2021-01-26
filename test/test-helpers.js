@@ -90,6 +90,13 @@ function insertMeals(db) {
    ('Pollo and Pinto mini tacos','https://mealprepmanual.com/pollo-and-pinto-mini-tacos/','Mini tacos with chicken and pinto beans',1);
   `);
 }
+function insertBodyComposition(db) {
+  return db.raw(`INSERT INTO users_body_composition (user_id,left_arm,right_arm,chest, waist, hips,left_thigh, right_thigh,left_calf, right_calf, weight, body_fat)
+  values (1,10,10,32,25,37.5,20.5,20.5,12,12,113,20.3),
+  (3,11,11,32,24,40,23,23,11,11,120,18.2),
+  (1,10,10,32,24,38,22,22,13,13,110,17.6),
+  (4,18,18,50,42,40,28,28,14,14,150,11.2);`);
+}
 function cleanTables(db) {
   return db.transaction((mdb) =>
     mdb
@@ -138,5 +145,6 @@ module.exports = {
   jwtToken,
   makeExerciseArray,
   insertBodyPartsAndMuscles,
-  insertMeals
+  insertMeals,
+  insertBodyComposition
 };
