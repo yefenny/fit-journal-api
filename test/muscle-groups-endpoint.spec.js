@@ -11,7 +11,7 @@ describe('Muscle group endpoints', () => {
   before('connect db', () => {
     db = knex({
       client: 'pg',
-      connection: process.env.process.env.TEST_DATABASE_URL
+      connection: process.env.TEST_DATABASE_URL
     });
     app.set('db', db);
   });
