@@ -81,6 +81,15 @@ function insertBodyPartsAndMuscles(db) {
   ('lower chest', 1),
   ('abdominals',4);`);
 }
+
+function insertMeals(db) {
+  return db.raw(`INSERT INTO meals (title, url, description, user_id)
+  values ('pumpkin protein cookies','https://www.burnthefatblog.com/healthy-pumpkin-spice-protein-cookies/', 'High protein pumpin cookies',1),
+   ('Banana protein bread','https://www.burnthefatblog.com/protein-banana-bread/', 'High protein banana bread',1),
+   ('Chipotle tomato salsa','https://www.culinaryhill.com/fresh-tomato-salsa-chipotle-copycat/#wprm-recipe-container-29457','Copycat of chipotle tomato salsa',2),
+   ('Pollo and Pinto mini tacos','https://mealprepmanual.com/pollo-and-pinto-mini-tacos/','Mini tacos with chicken and pinto beans',1);
+  `);
+}
 function cleanTables(db) {
   return db.transaction((mdb) =>
     mdb
@@ -128,5 +137,6 @@ module.exports = {
   seedUserTable,
   jwtToken,
   makeExerciseArray,
-  insertBodyPartsAndMuscles
+  insertBodyPartsAndMuscles,
+  insertMeals
 };

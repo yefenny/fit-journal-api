@@ -45,8 +45,9 @@ mealsRouter
     MealsService.getMealById(req.app.get('db'), id, userId)
       .then((meal) => {
         if (meal) {
-          res.status(200).json(meal);
-        }
+          return res.status(200).json(meal);
+        } else
+          return res.status(400).json({ error: { message: 'Invalid id' } });
       })
       .catch(next);
   })
@@ -63,7 +64,7 @@ mealsRouter
 
     MealsService.deleteMeal(req.app.get('db'), id, userId)
       .then(() => {
-        return res.status(204).location('/api/meals').end();
+        return res.status(204).end();
       })
       .catch(next);
   })
@@ -78,9 +79,13 @@ mealsRouter
     if (url) updateMeal.url = url;
     if (description) updateMeal.description = description;
 
+    MealsService.getMealById(req.app.get('db'), id, userId).then((meal) => {
+      if (!meal)
+        return res.status(400).json({ error: { message: 'Invalid id' } });
+    });
     MealsService.updateMeal(req.app.get('db'), id, userId, updateMeal)
       .then(() => {
-        return res.status('201').location('/api/meals').end();
+        return res.status('201').end();
       })
       .catch(next);
   });

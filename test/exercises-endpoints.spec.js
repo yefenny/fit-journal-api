@@ -4,7 +4,7 @@ const supertest = require('supertest');
 const helpers = require('./test-helpers');
 const { expect } = require('chai');
 
-describe.only('Exercises ENDPOINT', () => {
+describe('Exercises ENDPOINT', () => {
   let db;
   const exercises = helpers.makeExerciseArray();
   let users = helpers.makeUsersArray();

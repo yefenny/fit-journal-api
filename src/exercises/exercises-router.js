@@ -58,11 +58,11 @@ exercisesRouter
       })
       .catch(next);
   })
-  .delete((req, res, next) => {
+  .delete(async (req, res, next) => {
     const { id } = req.params;
     const userId = req.user.id;
     const db = req.app.get('db');
-    ExercisesServices.getExerciseById(db, id, userId)
+    await ExercisesServices.getExerciseById(db, userId, id)
       .then((exercise) => {
         if (!exercise) {
           return res
