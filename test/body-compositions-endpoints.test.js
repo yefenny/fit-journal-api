@@ -155,10 +155,10 @@ describe('Body compositions endpoint', () => {
     });
   });
   describe('Filter body compositiond by dates', () => {
+    beforeEach('insert body compositions', () =>
+      helpers.insertBodyComposition(db)
+    );
     it('returns status code 200 and an array', () => {
-      beforeEach('insert body compositions', () =>
-        helpers.insertBodyComposition(db)
-      );
       return supertest(app)
         .get('/api/body-compositions/find/2020-12-01/2020-12-31')
         .set('Authorization', `bearer ${token}`)
