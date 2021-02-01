@@ -88,6 +88,17 @@ exercisesRouter
 
     if (url) exercise.url = url;
     if (description) exercise.description = description;
+
+    await ExercisesServices.getExerciseById(db, userId, id)
+      .then((exercise) => {
+        if (!exercise) {
+          return res
+            .status(404)
+            .json({ error: { message: 'Exercise not found' } });
+        }
+      })
+      .catch(next);
+      
     await ExercisesServices.getExercisesMuscleGroup(db, id)
       .then((results) => {
         if (results) {
