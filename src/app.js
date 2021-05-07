@@ -17,15 +17,15 @@ const app = express();
 
 const morganOption = NODE_ENV === 'production' ? 'tiny' : 'common';
 
-// const allowedOrigins = ['http://localhost:3000'];
+const allowedOrigins = ['http://localhost:3000'];
 
-// var corsOptions = {
-//   origin: allowedOrigins,
-//   optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
-// };
+var corsOptions = {
+  origin: allowedOrigins,
+  optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+};
 
 app.use(morgan(morganOption));
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(helmet());
 
 app.use(jsonParser);
