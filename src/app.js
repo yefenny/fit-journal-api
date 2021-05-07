@@ -17,13 +17,10 @@ const app = express();
 
 const morganOption = NODE_ENV === 'production' ? 'tiny' : 'common';
 
-var corsOptions = {
-  origin: 'http://localhost:3000',
-  optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
-};
+
 
 app.use(morgan(morganOption));
-app.use(cors(corsOptions));
+app.use(cors());
 app.use(helmet());
 
 app.use(jsonParser);
