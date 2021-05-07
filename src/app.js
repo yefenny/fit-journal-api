@@ -17,9 +17,12 @@ const app = express();
 
 const morganOption = NODE_ENV === 'production' ? 'tiny' : 'common';
 
+var corsOptions = {
+  origin: 'https://fit-journal-client-bl1uh6ip4.vercel.app/'
+};
 app.use(morgan(morganOption));
 app.use(helmet());
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(jsonParser);
 
 app.use('/api/users', userRouter);
