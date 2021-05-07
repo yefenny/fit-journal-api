@@ -20,7 +20,7 @@ const morganOption = NODE_ENV === 'production' ? 'tiny' : 'common';
 const allowedOrigins = ['http://localhost:3000'];
 
 var corsOptions = {
-  origin: allowedOrigins,
+  origin: 'http://localhost:3000',
   optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 };
 
