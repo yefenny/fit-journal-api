@@ -17,10 +17,8 @@ const app = express();
 
 const morganOption = NODE_ENV === 'production' ? 'tiny' : 'common';
 
-const allowedOrigins = ['http://localhost:3000'];
-
 var corsOptions = {
-  origin: 'http://localhost:3000',
+  origin: 'http://example.com',
   optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 };
 
