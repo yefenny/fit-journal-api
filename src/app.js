@@ -22,6 +22,10 @@ app.use(cors());
 app.use(helmet());
 
 app.use(jsonParser);
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  next();
+});
 
 app.use('/api/users', userRouter);
 app.use(auth);
@@ -37,7 +41,7 @@ app.get('/', (req, res) => {
 app.use(function errorHandler(error, req, res, next) {
   let response;
   if (NODE_ENV === 'production') {
-    response = { message: error.message, error };
+    response = { error: { message: 'server error' } };
   } else {
     console.error(error);
     response = { message: error.message, error };
