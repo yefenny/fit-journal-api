@@ -18,14 +18,10 @@ const app = express();
 const morganOption = NODE_ENV === 'production' ? 'tiny' : 'common';
 
 app.use(morgan(morganOption));
-app.use(cors());
+// app.use(cors());
 app.use(helmet());
 
 app.use(jsonParser);
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  next();
-});
 
 app.use('/api/users', userRouter);
 app.use(auth);
