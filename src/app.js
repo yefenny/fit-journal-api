@@ -31,11 +31,10 @@ var corsOptions = {
   }
 };
 app.use(morgan(morganOption));
-
+app.use(cors(corsOptions));
 app.use(helmet());
 app.use(helmet.crossOriginResourcePolicy({ policy: 'cross-origin' }));
 
-app.use(cors());
 app.use(express.static('public'));
 app.use(jsonParser);
 
