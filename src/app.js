@@ -19,7 +19,10 @@ const morganOption = NODE_ENV === 'production' ? 'tiny' : 'common';
 
 app.use(morgan(morganOption));
 app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
+  res.header(
+    'Access-Control-Allow-Origin',
+    'https://fit-journal-api.herokuapp.com/api/users/login'
+  );
   next();
 });
 app.use(helmet());
