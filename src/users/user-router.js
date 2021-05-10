@@ -49,19 +49,21 @@ userRouter.route('/login/').post((req, res, next) => {
       return res.status(400).json({ error: { message: `${key} is missing` } });
   }
 
-  UsersService.getUserByEmail(db, email).then((user) => {
-    if (!user)
-      return res.status(400).json({
-        error: { message: ` 'email' or 'password' invalid` }
-      });
-    if (!UsersService.checkPassword(password, user.password)) {
-      return res.status(400).json({
-        error: { message: ` 'email' or 'password' invalid` }
-      });
-    }
-    const token = UsersService.generateJwtToken(user);
-    res.send({ authToken: token });
-  });
+  UsersService.getUserByEmail(db, email)
+    .then((user) => {
+      if (!user)
+        return res.status(400).json({
+          error: { message: ` 'email' or 'password' invalid` }
+        });
+      if (!UsersService.checkPassword(password, user.password)) {
+        return res.status(400).json({
+          error: { message: ` 'email' or 'password' invalid` }
+        });
+      }
+      const token = UsersService.generateJwtToken(user);
+      res.send({ authToken: token });
+    })
+    .catch(next);
 });
 
 userRouter
