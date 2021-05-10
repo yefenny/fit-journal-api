@@ -18,8 +18,8 @@ const app = express();
 const morganOption = NODE_ENV === 'production' ? 'tiny' : 'common';
 
 app.use(morgan(morganOption));
-app.use(cors({ origin: null }));
-app.use(helmet());
+app.use(cors());
+// app.use(helmet());
 // app.use(helmet.crossOriginResourcePolicy({ policy: 'cross-origin' }));
 
 app.use(express.static('public'));
