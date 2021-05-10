@@ -55,7 +55,7 @@ app.use(function (req, res, next) {
 app.use(express.static('public'));
 app.use(jsonParser);
 
-app.use('/api/users', userRouter);
+app.use('/api/users', cors(corsOptions), userRouter);
 app.use(auth);
 app.use('/api/exercises', exercisesRouter);
 app.use('/api/body-parts', bodyPartsRouter);
