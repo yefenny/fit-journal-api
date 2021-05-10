@@ -1,7 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const morgan = require('morgan');
-const cors = require('cors');
+let cors = require('cors');
 const helmet = require('helmet');
 const NODE_ENV = require('./config');
 const userRouter = require('./users/user-router');
@@ -18,13 +18,7 @@ const app = express();
 const morganOption = NODE_ENV === 'production' ? 'tiny' : 'common';
 
 app.use(morgan(morganOption));
-app.use((req, res, next) => {
-  res.header(
-    'Access-Control-Allow-Origin',
-    'https://fit-journal-client-yefenny.vercel.app'
-  );
-  next();
-});
+app.options('*', cors());
 app.use(helmet());
 
 app.use(jsonParser);
