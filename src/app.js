@@ -34,6 +34,7 @@ app.use(morgan(morganOption));
 app.use(cors(corsOptions));
 app.use(helmet());
 
+app.use(express.static('public'));
 app.use(jsonParser);
 
 app.use('/api/users', userRouter);
