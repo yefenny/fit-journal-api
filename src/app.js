@@ -17,18 +17,9 @@ const app = express();
 
 const morganOption = NODE_ENV === 'production' ? 'tiny' : 'common';
 
-var whitelist = [
-  'https://fit-journal-client-yefenny.vercel.app',
-  'http://localhost:3000'
-];
 var corsOptions = {
-  origin: function (origin, callback) {
-    if (whitelist.indexOf(origin) !== -1) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  }
+  origin: 'https://fit-journal-client-yefenny.vercel.app',
+  optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 };
 app.use(morgan(morganOption));
 app.use(cors(corsOptions));
