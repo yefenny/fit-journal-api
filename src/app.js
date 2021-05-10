@@ -21,7 +21,7 @@ app.use(morgan(morganOption));
 app.use((req, res, next) => {
   res.header(
     'Access-Control-Allow-Origin',
-    'https://fit-journal-client-yefenny.vercel.app/'
+    'https://fit-journal-client-yefenny.vercel.app'
   );
   next();
 });
