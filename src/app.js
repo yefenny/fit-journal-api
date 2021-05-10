@@ -18,7 +18,7 @@ const app = express();
 const morganOption = NODE_ENV === 'production' ? 'tiny' : 'common';
 
 app.use(morgan(morganOption));
-app.use(cors());
+app.use(cors({ origin: 'https://fit-journal-client-yefenny.vercel.app' }));
 // app.use(helmet());
 // app.use(helmet.crossOriginResourcePolicy({ policy: 'cross-origin' }));
 
