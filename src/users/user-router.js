@@ -6,7 +6,7 @@ var cors = require('cors');
 userRouter
   .route('/signup/')
   .post(
-    cors({ origin: 'https://fit-journal-client-yefenny.vercel.app' }),
+    cors({ origin: 'http://fit-journal-client-yefenny.vercel.app' }),
     (req, res, next) => {
       const { email, full_name, password } = req.body;
       const db = req.app.get('db');
