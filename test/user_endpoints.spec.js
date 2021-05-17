@@ -2,7 +2,6 @@ const app = require('../src/app');
 const knex = require('knex');
 const supertest = require('supertest');
 const helpers = require('./test-helpers');
-const { expect, expectCt } = require('helmet');
 
 describe('User endpoints', () => {
   let db;

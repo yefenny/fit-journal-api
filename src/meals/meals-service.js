@@ -1,6 +1,6 @@
 const MealsService = {
   getAllMeals(db, userId) {
-    return db('meals').where('user_id', userId);
+    return db('meals').where('user_id', userId).orderBy('date_created', 'desc');
   },
   getFilteredMeals(db, parameter, userId) {
     const query = `select * from meals where user_id = ${userId} and( title ilike '%${parameter}%' or description ilike '%${parameter}%')`;
